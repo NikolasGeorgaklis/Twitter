@@ -10,8 +10,12 @@
 #import "APIManager.h"
 #import "AppDelegate.h"
 #import "LoginViewController.h"
+#import "Tweet.h"
+#import "TweetCell.h"
 
-@interface TimelineViewController ()
+@interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate>
+@property(strong, nonatomic) NSMutableArray *arrayOfTweets;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 
@@ -30,14 +34,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    //self.tableView.rowHeight = UITableViewAutomaticDimension;
     // Get timeline
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
             NSLog(@"😎😎😎 Successfully loaded home timeline");
-            for (NSDictionary *dictionary in tweets) {
-                NSString *text = dictionary[@"text"];
-                NSLog(@"%@", text);
-            }
+            self.arrayOfTweets = [tweets mutableCopy];
+            NSLog(@"%@", self.arrayOfTweets);
+            [self.tableView reloadData];
+
         } else {
             NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
         }
@@ -47,6 +54,32 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    Tweet *tweet = self.arrayOfTweets[indexPath.row];
+    TweetCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TweetCell"];
+    
+    cell.tweet = tweet;
+    cell.authorName.text = tweet.user.name;
+    cell.username.text = tweet.user.screenName;
+    cell.tweetDate.text = tweet.createdAtString;
+    cell.tweetContent.text = tweet.text;
+    
+    //update favorite/retweet counts
+    //[cell refreshData];
+        
+    NSString *URLString = tweet.user.profilePicture;
+    NSURL *url = [NSURL URLWithString:URLString];
+    NSData *urlData = [NSData dataWithContentsOfURL:url];
+    
+    cell.pfp.image = [UIImage imageWithData:urlData];
+    NSLog(@"%@", self.arrayOfTweets);
+    
+    return cell;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return self.arrayOfTweets.count;
 }
 
 /*
