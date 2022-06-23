@@ -7,6 +7,8 @@
 //
 
 #import "TweetCell.h"
+#import "APIManager.h"
+#import "UIImageView+AFNetworking.h"
 
 @implementation TweetCell
 
@@ -24,10 +26,54 @@
 - (IBAction)didTapMsg:(id)sender {
 }
 
+- (IBAction)didTapFavorite:(id)sender {
+    // TODO: Update the local tweet model
+    if (self.tweet.favorited){
+        self.tweet.favorited = false;
+        self.tweet.favoriteCount -= 1;
+    }
+    else{
+        self.tweet.favorited = true;
+        self.tweet.favoriteCount += 1;
+    }
+    // TODO: Update cell UI
+    [self refreshData];
+    // TODO: Send a POST request to the POST favorites/create endpoint
+    [[APIManager shared] favorite:self.tweet completion:^(Tweet *tweet, NSError *error) {
+         if(error){
+              NSLog(@"Error favoriting tweet: %@", error.localizedDescription);
+         }
+         else{
+             NSLog(@"Successfully favorited the following Tweet: %@", tweet.text);
+         }
+     }];
+    
+}
+
 - (IBAction)didTapRetweet:(id)sender {
 }
 
-
 - (IBAction)didTapReply:(id)sender {
+}
+
+
+- (void)refreshData{
+    self.tweetContent.text = self.tweet.text;
+    self.username.text = self.tweet.user.name;
+    self.authorName.text = self.tweet.user.screenName;
+    self.tweetDate.text = self.tweet.createdAtString;
+    NSURL *url = [NSURL URLWithString:self.tweet.user.profilePicture];
+    [self.pfp setImageWithURL:url];
+    self.retweets.text = [NSString stringWithFormat:@"%d", self.tweet.retweetCount];
+    self.favorites.text = [NSString stringWithFormat:@"%d", self.tweet.favoriteCount];
+
+    
+    UIImage *favoriteIcon = self.tweet.favorited ? [UIImage imageNamed:@"favor-icon-red.png"] : [UIImage imageNamed:@"favor-icon.png"];
+    
+    UIImage *retweetIcon = self.tweet.retweeted ? [UIImage imageNamed:@"retweet-icon-green.png"] : [UIImage imageNamed:@"retweet-icon.png"];
+    
+    [self.btnFavorite setImage:favoriteIcon forState:UIControlStateNormal];
+    [self.btnRetweet setImage:retweetIcon forState:UIControlStateNormal];
+    
 }
 @end

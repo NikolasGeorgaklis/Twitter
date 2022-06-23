@@ -124,7 +124,7 @@
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" image="favor-icon"/>
                                                     <connections>
-                                                        <action selector="didTapRetweet:" destination="ANE-XI-ffM" eventType="touchUpInside" id="2eh-Cf-7vf"/>
+                                                        <action selector="didTapFavorite:" destination="ANE-XI-ffM" eventType="touchUpInside" id="L21-XG-RGx"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FBq-io-8uL">
@@ -163,6 +163,9 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="authorName" destination="WK4-lE-QqO" id="CLK-Hl-jKR"/>
+                                            <outlet property="btnFavorite" destination="iQY-Nx-T8W" id="iOS-FK-lD2"/>
+                                            <outlet property="btnReply" destination="pCY-A8-ZLo" id="Tw3-nP-wf3"/>
+                                            <outlet property="btnRetweet" destination="Uet-dH-sLy" id="242-Cf-sHY"/>
                                             <outlet property="favorites" destination="v48-xR-Ha0" id="TZ7-mz-mq8"/>
                                             <outlet property="pfp" destination="Ylo-BJ-dl0" id="Y73-La-Mve"/>
                                             <outlet property="retweets" destination="pUI-UU-bIr" id="Y4H-la-PAS"/>

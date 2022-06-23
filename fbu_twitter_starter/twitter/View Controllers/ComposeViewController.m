@@ -38,10 +38,11 @@
 - (IBAction)didTapTweet:(id)sender {
     [[APIManager shared] postStatusWithText:self.tweetBox.text completion:^(Tweet *tweet, NSError *error) {
         if (error){
-            NSLog(@"Error composing tweet.");
+            NSLog(@"Error composing Tweet: %@", error.localizedDescription);
         }
         else{
-            NSLog(@"Tweet composition success");
+            [self.delegate didTweet:tweet];
+            NSLog(@"Compose Tweet Success!");
             }
     }];
     [self dismissViewControllerAnimated:true completion:nil];
