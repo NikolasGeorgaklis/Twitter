@@ -12,6 +12,7 @@
 #import "LoginViewController.h"
 #import "Tweet.h"
 #import "TweetCell.h"
+#import "ComposeViewController.h"
 
 @interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate>
 @property(strong, nonatomic) NSMutableArray *arrayOfTweets;
@@ -39,21 +40,12 @@
     self.tableView.delegate = self;
     //self.tableView.rowHeight = UITableViewAutomaticDimension;
     // Get timeline
-    [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
-        if (tweets) {
-            NSLog(@"😎😎😎 Successfully loaded home timeline");
-            self.arrayOfTweets = [tweets mutableCopy];
-            NSLog(@"%@", self.arrayOfTweets);
-            [self.tableView reloadData];
-
-        } else {
-            NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
-        }
-    }];
+    [self getTimeline];
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(getTimeline) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:self.refreshControl atIndex:0];
 }
+
 - (void)getTimeline {
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
@@ -103,7 +95,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.arrayOfTweets.count;
 }
-
+- (void)didTweet:(Tweet *)tweet{}
 /*
 #pragma mark - Navigation
 
