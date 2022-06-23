@@ -65,6 +65,10 @@
     cell.username.text = tweet.user.screenName;
     cell.tweetDate.text = tweet.createdAtString;
     cell.tweetContent.text = tweet.text;
+    cell.retweets.text = [NSString stringWithFormat:@"%d", cell.retweetCount];
+    cell.favorites.text = [NSString stringWithFormat:@"%d", cell.favoriteCount];
+
+    
     
     //update favorite/retweet counts
     //[cell refreshData];
