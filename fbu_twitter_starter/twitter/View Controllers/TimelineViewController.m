@@ -13,6 +13,7 @@
 #import "Tweet.h"
 #import "TweetCell.h"
 #import "ComposeViewController.h"
+#import "DetailsViewController.h"
 
 @interface TimelineViewController () <ComposeViewControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 @property(strong, nonatomic) NSMutableArray *arrayOfTweets;
@@ -76,6 +77,16 @@
     cell.tweetContent.text = tweet.text;
     cell.retweets.text = [NSString stringWithFormat:@"%d", tweet.retweetCount];
     cell.favorites.text = [NSString stringWithFormat:@"%d", tweet.favoriteCount];
+    
+    //update favorite button color accordingly
+    UIImage *favoriteIcon = tweet.favorited ? [UIImage imageNamed:@"favor-icon-red.png"] : [UIImage imageNamed:@"favor-icon.png"];
+    [cell.btnFavorite setImage:favoriteIcon forState:UIControlStateNormal];
+    
+    //update favorite button color accordingly
+    UIImage *retweetIcon = tweet.retweeted ? [UIImage imageNamed:@"retweet-icon-green.png"] : [UIImage imageNamed:@"retweet-icon.png"];
+    [cell.btnRetweet setImage:retweetIcon forState:UIControlStateNormal];
+
+
 
     
     
@@ -103,9 +114,20 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    UINavigationController *navigationController = [segue destinationViewController];
-        ComposeViewController *composeController = (ComposeViewController*)navigationController.topViewController;
-        composeController.delegate = self;
+    if([[segue identifier] isEqualToString:@"retweetS"]){
+        UINavigationController *navigationController = [segue destinationViewController];
+            ComposeViewController *composeController = (ComposeViewController*)navigationController.topViewController;
+            composeController.delegate = self;
+    }
+    if([[segue identifier] isEqualToString:@"detailsSeg"]){
+        UINavigationController *navigationController = [segue destinationViewController];
+        DetailsViewController *tweetDest = (DetailsViewController*)navigationController.topViewController;
+        UITableViewCell *tappedCell = sender;
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:tappedCell];
+        Tweet *tweet = self.arrayOfTweets[indexPath.row];
+        tweetDest.tweet = tweet;
+            
+    }
 }
 
 

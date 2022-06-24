@@ -9,6 +9,7 @@
 #import "TweetCell.h"
 #import "APIManager.h"
 #import "UIImageView+AFNetworking.h"
+#import "DateTools.h"
 
 @implementation TweetCell
 
@@ -39,16 +40,27 @@
     // TODO: Update cell UI
     [self refreshData];
     // TODO: Send a POST request to the POST favorites/create endpoint
-    [[APIManager shared] favorite:self.tweet completion:^(Tweet *tweet, NSError *error) {
-         if(error){
-              NSLog(@"Error favoriting tweet: %@", error.localizedDescription);
-         }
-         else{
-             NSLog(@"Successfully favorited the following Tweet: %@", tweet.text);
-         }
-     }];
-    
+    if (self.tweet.favorited) {
+        [[APIManager shared] favorite:self.tweet completion:^(Tweet *tweet, NSError *error) {
+             if(error){
+                  NSLog(@"Error favoriting tweet: %@", error.localizedDescription);
+             }
+             else if (tweet){
+                 NSLog(@"Successfully favorited the following Tweet: %@", tweet.text);
+             }
+         }];
+    } else {
+        [[APIManager shared] unfavorite:self.tweet completion:^(Tweet *tweet, NSError *error) {
+            if (error) {
+                NSLog(@"Error unfavoriting tweet: %@", error.localizedDescription);
+            }
+            else if (tweet) {
+                NSLog(@"Successfully unfavorited the following Tweet: \n%@", tweet.text);
+            }
+        }];
+    }
 }
+
 
 - (IBAction)didTapRetweet:(id)sender {
     if (self.tweet.retweeted){
