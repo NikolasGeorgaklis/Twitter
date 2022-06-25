@@ -101,8 +101,8 @@
 
 - (void)refreshData{
     self.tweetContent.text = self.tweet.text;
-    self.username.text = self.tweet.user.name;
-    self.authorName.text = self.tweet.user.screenName;
+    self.username.text = self.tweet.user.screenName;
+    self.authorName.text = self.tweet.user.name;
     self.tweetDate.text = self.tweet.createdAtString;
     NSURL *url = [NSURL URLWithString:self.tweet.user.profilePicture];
     [self.pfp setImageWithURL:url];
